@@ -15,51 +15,42 @@ var changed			= require('gulp-changed');
 var path 			= require('path');
 var source 			= require('vinyl-source-stream');
 
-var fileGlob = [
+// Different sources
+var bootstrapMain = 'bootstrap/bootstrap.less';
+var bootstrapGlob = [
 	'./bootstrap/**/*.less',
 	'!./bootstrap/bootstrap.less',
 	'!./bootstrap/mixins.less'
 ];
+var noImports = './no_imports/**/*.less';
 
+// For switching sources faster
+//var glob = bootstrapMain;
+//var glob = bootstrapGlob;
+var glob = noImports;
 
-gulp.task('default', function (){
-	console.log('success');
-});
+// Default task
+gulp.task('default', ['watch']);
 
-gulp.task('less-single-file', function (){
-	var singleFileTimer = duration('Single File Timer');
-
-	 return gulp.src('./bootstrap/bootstrap.less')
-	//.pipe( plumber() )
-	.once('data', singleFileTimer.start)
-	.pipe( sourcemaps.init() )
-	.pipe( less() )
-	.pipe( sourcemaps.write() )
-	.pipe( autoprefixer() )
-	.pipe( gulp.dest('output') )
-	.pipe( rename('bootstrap.min.css') )
-	.pipe( minify() )
-	.pipe( singleFileTimer )
-	.pipe( gulp.dest('output') )
-});
-
-var bootstrapMain = [
-	'bootstrap/bootstrap.less'
-];
+// Build task
 gulp.task('less', function () {
-	return gulp.src(fileGlob)
-		.pipe(cached('lessFiles'))
-		.pipe(remember('lessFiles'))
+	return gulp.src(glob)
+		.pipe(cached('less'))
+		.pipe(remember('less'))
+		.pipe(concat('onefile.less'))
 		.pipe(less())
+		.pipe(minify())
+		.pipe(autoprefixer())
 		.pipe(gulp.dest('output'));
 });
 
+// Watcher task
 gulp.task('watch', function () {
-	var watcher = gulp.watch(fileGlob, ['less']);
+	var watcher = gulp.watch(glob, ['less']);
 	watcher.on('change', function (e) {
 		if (e.type === 'deleted') {
 			delete cached.caches.scripts[e.path];
-			remember.forget('lessFiles', e.path);
+			remember.forget('less', e.path);
 		}
 	});
 });
