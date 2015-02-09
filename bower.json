@@ -1,0 +1,9 @@
+{
+  "name": "perfect-less-build",
+  "version": "0.0.0",
+  "homepage": "https://github.com/tuelsch/perfect-less-build",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "~3.3.2"
+  }
+}
