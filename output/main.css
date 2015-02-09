@@ -6534,8 +6534,8 @@ body {
 }
 
 body.black {
-  background-color: black;
-  color: #ffffff;
+  background-color: #000000;
+  color: white;
 }
 
 body {

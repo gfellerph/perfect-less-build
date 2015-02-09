@@ -31,13 +31,7 @@ gulp.task('less', function () {
 	return gulp.src(glob)
 		.pipe(cached('less'))
 		.pipe(sourcemaps.init())
-		.pipe(
-			less(
-				{
-					plugins: []
-				}
-			)
-		)
+		.pipe(less({plugins:[/*autoprefix, cleancss*/]}))
 		.on('error', function (err, some) {
 			console.log(err, some);
 		})
