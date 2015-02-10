@@ -8,8 +8,12 @@ var changed              = require('gulp-changed');
 var using                = require('gulp-using');
 var lessPluginCleanCSS   = require('less-plugin-clean-css');
 var lessPluginAutoprefix = require('less-plugin-autoprefix');
+var progeny              = require('gulp-progeny');
+var autoprefixer         = require('gulp-autoprefixer');
+var minifyCSS            = require('gulp-minify-css');
+var newer = require('gulp-newer');
 
-var dest = './output';
+var dest = 'output';
 var glob = ['./less/**/*.less'];
 var browsers = [
 	'Android >= 2.3',
@@ -30,11 +34,13 @@ gulp.task('default', ['less', 'watch']);
 gulp.task('less', function () {
 	return gulp.src(glob)
 		.pipe(cached('less'))
+		.pipe(using({prefix: 'less'}))
+		.pipe(progeny({
+            regexp: /^\s*@import\s*(?:\(\w+\)\s*)?['"]([^'"]+)['"]/
+        }))
 		.pipe(sourcemaps.init())
 		.pipe(less({plugins:[/*autoprefix, cleancss*/]}))
-		.on('error', function (err, some) {
-			console.log(err, some);
-		})
+		.on('error', function (err) { console.log(err); })
 		.pipe(using())
 		.pipe(remember('css'))
 		.pipe(concat('main.css'))
