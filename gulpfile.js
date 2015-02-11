@@ -4,14 +4,10 @@ var concat               = require('gulp-concat');
 var remember             = require('gulp-remember');
 var cached               = require('gulp-cached');
 var sourcemaps           = require('gulp-sourcemaps');
-var changed              = require('gulp-changed');
 var using                = require('gulp-using');
 var lessPluginCleanCSS   = require('less-plugin-clean-css');
 var lessPluginAutoprefix = require('less-plugin-autoprefix');
 var progeny              = require('gulp-progeny');
-var autoprefixer         = require('gulp-autoprefixer');
-var minifyCSS            = require('gulp-minify-css');
-var newer = require('gulp-newer');
 
 var dest = 'output';
 var glob = ['./less/**/*.less'];
@@ -39,7 +35,7 @@ gulp.task('less', function () {
             regexp: /^\s*@import\s*(?:\(\w+\)\s*)?['"]([^'"]+)['"]/
         }))
 		.pipe(sourcemaps.init())
-		.pipe(less({plugins:[/*autoprefix, cleancss*/]}))
+		.pipe(less({plugins:[autoprefix, cleancss]}))
 		.on('error', function (err) { console.log(err); })
 		.pipe(using())
 		.pipe(remember('css'))
